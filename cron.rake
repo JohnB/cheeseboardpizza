@@ -8,7 +8,7 @@ task :cron => :environment do
   end
   tweet_text = "d @JohnB Unable to get the pizza of the day."
   begin
-    tweet_text = "Testing testing 123." #PizzaOfTheDay.new.tweet_text
+    tweet_text = PizzaOfTheDay.new.tweet_text
   rescue Exception => e
     tweet_text = "d @JohnB #{e}"[0..139]
   end
