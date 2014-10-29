@@ -21,6 +21,19 @@ class PizzaOfTheDay
   end
 
   def pizza_days
+    # This scraping script is a lot simpler than I remember - only one selection via hpricot.
+    # The salient piece of HTML looks like this, and we only care about the innerHtml:
+    #
+    #   <div class="columns">
+    #	    <div class="column">
+    #       <h3><strong>The Week&rsquo;s Pizza</strong></h3>
+    #       <h4><label for="pizza_week_wednesday_pizza"></label></h4>		
+    #       <h4>Tuesday 10/28</h4>
+		#       <p>Zucchini, onion, mozzarella and other stuff..</p>
+		#       <h4>Wednesday 10/29</h4>
+		#       <p>Baby dino kale, baby swiss chard, and other stuff..</p>
+		#       ...
+		#
     @pizza_days ||= (pizza_page/"div.columns"/"div.column").first
   end
 
@@ -51,19 +64,9 @@ class PizzaOfTheDay
     end
   end
 
-  #def pizzas_this_week
-  #  days_with_pizza
-  #end
-
   def pizza_of_the_day( today = Time.now )
     today = today.strftime("%m/%d")
     pizza = days_with_pizza[today]
-    #month, day = today.split('/').collect { |digits| ("0"+digits)[-2..-1].to_i }
-    #pizza = nil
-    #["%d/%d", "%02d/%d", "%d/%02d", "%02d/%02d"].each do |format|
-    #  day_to_check = format % [month,day]
-    #  pizza ||= pizzas_this_week[day_to_check]
-    #end
     pizza || "So sad. No Pizza Today."
   end
 
