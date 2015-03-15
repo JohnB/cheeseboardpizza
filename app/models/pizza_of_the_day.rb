@@ -71,7 +71,7 @@ class PizzaOfTheDay
   def pizza_of_the_day( today = Time.now )
     today = today.strftime("%m/%d")
     pizza = days_with_pizza[today]
-    pizza || "So sad. No Pizza Today."
+    pizza || "Bummer Dude. No pizza today."
   end
 
   def pizza_of_the_day_with_time(today = Time.now)
