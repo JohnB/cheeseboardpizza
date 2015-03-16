@@ -1,6 +1,5 @@
 
 require 'open-uri'
-require 'Hpricot'
 
 #
 # NOTE: This code is very brittle and will break if the Cheese Board Collective
@@ -10,6 +9,7 @@ require 'Hpricot'
 # what day the pizza is served (e.g. "<p class='tuesday'>Roasted potatoes..</p>")
 #
 class PizzaOfTheDay
+  PIZZA_PAGE_URL = 'http://cheeseboardcollective.coop/pizza'
   DAY_MATCH = /\d+\/\d+/
 
   def cheeseboard_date(time = Time.now)
@@ -18,7 +18,7 @@ class PizzaOfTheDay
   end
 
   def pizza_page
-    @pizza_page ||= open('http://cheeseboardcollective.coop/pizza') { |f| Hpricot(f) }
+    @pizza_page = Nokogiri::HTML(open(PIZZA_PAGE_URL))
   end
 
   def pizza_days
@@ -82,15 +82,3 @@ class PizzaOfTheDay
     pizza_of_the_day_with_time(today)[0..139]
   end
 end
-
-# Build some of the Rails time helpers
-class Fixnum
-  def days
-    24*60*60*self
-  end
-
-  def from_now
-    Time.at(Time.now.to_i + self)
-  end
-end
-

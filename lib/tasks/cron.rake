@@ -23,8 +23,9 @@ task :cron => :environment do
   message = prepare_message || "d @JohnB PizzaOfTheDay.new.tweet_text returned nil."
 
   ## Uncomment during tests, to get around twitter blocking duplicate test messages
-  #message = Time.now.strftime("%H:%m:%s #{prepare_message}") 
+  message = Time.now.strftime("%H:%M:%S #{prepare_message}") if ENV['RAILS_ENV'] == "development"
 
+  puts ENV['RAILS_ENV']
   puts message
   puts client.update(message).inspect
 end
