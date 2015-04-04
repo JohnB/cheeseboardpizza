@@ -62,6 +62,8 @@ class PizzaOfTheDay
       topping = topping_for_a_day(day)
       if topping
         topping.gsub!(/ and /,' & ')
+        topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
+        topping.squeeze!(' ')
         hash[day.strftime("%m/%d")] ||= topping
       end
       hash

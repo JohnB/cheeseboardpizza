@@ -1,7 +1,6 @@
 desc "This task is called by the Heroku cron add-on"
 task :cron => :environment do
   def create_client_connection
-    #client = Twitter::Client.new do |config|
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV['consumer_key']
       config.consumer_secret     = ENV['consumer_secret']
@@ -22,8 +21,8 @@ task :cron => :environment do
   client = create_client_connection
   message = prepare_message || "d @JohnB PizzaOfTheDay.new.tweet_text returned nil."
 
-  ## Uncomment during tests, to get around twitter blocking duplicate test messages
-  message = Time.now.strftime("%H:%M:%S #{prepare_message}") if ENV['RAILS_ENV'] == "development"
+  ## Add full timestamp during tests, to get around twitter blocking duplicate test messages
+  message = Time.now.strftime("%H:%M:%S #{message}")[0..139] if ENV['RAILS_ENV'] == "development"
 
   puts ENV['RAILS_ENV']
   puts message
