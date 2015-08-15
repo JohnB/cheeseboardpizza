@@ -57,12 +57,24 @@ class PizzaOfTheDay
     nil
   end
 
+  def salad_for_a_day(day)
+    day_to_look_for = cheeseboard_date(day)
+    lines_that_may_have_dates_or_toppings.each_with_index do |line, idx|
+      if line == day_to_look_for
+        salad = lines_that_may_have_dates_or_toppings[idx+2] || ""
+        return salad.sub(/^Salad\:\s*/,'')
+      end
+    end
+    nil
+  end
+
   def days_with_pizza
     @days_with_pizza ||= potential_pizza_dates.inject({}) do |hash, day|
       topping = topping_for_a_day(day)
       if topping
         topping.gsub!(/ and /,' & ')
         topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
+        topping.sub!(/^Pizza\:\s+/,'')   # after adding salads, they stuck 'Pizza: ' on the front.
         topping.squeeze!(' ')
         hash[day.strftime("%m/%d")] ||= topping
       end
@@ -73,7 +85,7 @@ class PizzaOfTheDay
   def pizza_of_the_day( today = Time.now )
     today = today.strftime("%m/%d")
     pizza = days_with_pizza[today]
-    pizza || "Bummer Dude. No pizza today."
+    pizza || "Aw shucks! No pizza today."
   end
 
   def pizza_of_the_day_with_time(today = Time.now)
@@ -82,5 +94,16 @@ class PizzaOfTheDay
 
   def tweet_text(today = Time.now)
     pizza_of_the_day_with_time(today)[0..139]
+  end
+
+  def salad_tweet_text(today = Time.now)
+    salad = salad_for_a_day(today)
+    if salad.blank?
+      return nil
+    end
+    salad.gsub!(/ and /,' & ')
+    salad.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
+    salad.squeeze!(' ')
+    today.strftime("%m/%d Salad: ") + salad
   end
 end

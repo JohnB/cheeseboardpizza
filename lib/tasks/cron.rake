@@ -18,6 +18,14 @@ task :cron => :environment do
     end
   end
 
+  def prepare_salad
+    begin
+      tweet_text = PizzaOfTheDay.new.salad_tweet_text
+    rescue Exception => e
+      tweet_text = "d @JohnB salad #{e}"[0..139]
+    end
+  end
+
   client = create_client_connection
   message = prepare_message || "d @JohnB PizzaOfTheDay.new.tweet_text returned nil."
 
@@ -27,5 +35,16 @@ task :cron => :environment do
   puts ENV['RAILS_ENV']
   puts message
   puts client.update(message).inspect
+
+  message = prepare_salad
+  if message
+    ## Add full timestamp during tests, to get around twitter blocking duplicate test messages
+    message = Time.now.strftime("%H:%M:%S #{message}")[0..139] if ENV['RAILS_ENV'] == "development"
+
+    puts ENV['RAILS_ENV']
+    puts message
+    puts client.update(message).inspect
+  end
+
 end
 
