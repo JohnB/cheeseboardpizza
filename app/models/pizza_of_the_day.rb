@@ -18,7 +18,7 @@ class PizzaOfTheDay
   end
 
   def pizza_page
-    @pizza_page = Nokogiri::HTML(open(PIZZA_PAGE_URL))
+    @pizza_page ||= Nokogiri::HTML(open(PIZZA_PAGE_URL))
   end
 
   def pizza_days
@@ -47,10 +47,19 @@ class PizzaOfTheDay
 
   def days_and_pizzas
     days = (pizza_days / "article" / ".date").children.collect(&:text)
-    pizzas = (pizza_days / ".menu" / "p").children.collect(&:text)
+    pizzas = (pizza_days / ".menu" ).map {|el| el.children[3].try(:text) }
 
     result = {}
     days.each_with_index { |day, index| result[day] = pizzas[index] }
+    result
+  end
+
+  def days_and_salads
+    days = (pizza_days / "article" / ".date").children.collect(&:text)
+    salads = (pizza_days / ".menu" ).map {|el| el.children[7].try(:text) }
+
+    result = {}
+    days.each_with_index { |day, index| result[day] = salads[index] }
     result
   end
 
@@ -84,40 +93,33 @@ class PizzaOfTheDay
     pizza_of_the_day_with_time(today)[0..139]
   end
 
-  # def lines_that_may_have_dates_or_toppings
-  #   @lines_that_may_have_dates_or_toppings = pizza_days.
-  #       children.
-  #       collect {|i| i.inner_text.gsub(/\s+/,' ').strip }.
-  #       reject {|i| i == "" }
-  # end
-  #
-  # def topping_for_a_day(day)
-  #   day_to_look_for = cheeseboard_date(day)
-  #   lines_that_may_have_dates_or_toppings.each_with_index do |line, idx|
-  #     return lines_that_may_have_dates_or_toppings[idx+1] if line == day_to_look_for
-  #   end
-  #   nil
-  # end
-  #
-  # def salad_for_a_day(day)
-  #   day_to_look_for = cheeseboard_date(day)
-  #   lines_that_may_have_dates_or_toppings.each_with_index do |line, idx|
-  #     if line == day_to_look_for
-  #       salad = lines_that_may_have_dates_or_toppings[idx+2] || ""
-  #       return salad.sub(/^Salad\:\s*/,'')
-  #     end
-  #   end
-  #   nil
-  # end
-  #
-  # def salad_tweet_text(today = Time.now)
-  #   salad = salad_for_a_day(today)
-  #   if salad.blank?
-  #     return nil
-  #   end
-  #   salad.gsub!(/ and /,' & ')
-  #   salad.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
-  #   salad.squeeze!(' ')
-  #   today.strftime("%m/%d Salad: ") + salad
-  # end
+  def days_with_salad
+    @days_with_salad ||= potential_pizza_dates.inject({}) do |hash, day|
+      day_to_look_for = cheeseboard_date(day)
+
+      topping = days_and_salads[day_to_look_for]
+      if topping
+        topping.gsub!(/ and /,' & ')
+        topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
+        # topping.sub!(/^Pizza\:\s+/,'')   # after adding salads, they stuck 'Pizza: ' on the front.
+        topping.squeeze!(' ')
+        hash[day.strftime("%m/%d")] ||= topping
+      end
+      hash
+    end
+  end
+
+  def salad_of_the_day( today = Time.now )
+    today = today.strftime("%m/%d")
+    salad = days_with_salad[today]
+    salad || "Aw shucks! No salad today."
+  end
+
+  def salad_of_the_day_with_time(today = Time.now)
+    today.strftime("%m/%d: ") + salad_of_the_day(today)
+  end
+
+  def salad_tweet_text(today = Time.now)
+    salad_of_the_day_with_time(today)[0..139]
+  end
 end

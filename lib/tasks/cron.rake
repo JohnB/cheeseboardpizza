@@ -36,15 +36,15 @@ task :cron => :environment do
   puts message
   puts client.update(message).inspect
 
-  # message = prepare_salad
-  # if message
-  #   ## Add full timestamp during tests, to get around twitter blocking duplicate test messages
-  #   message = Time.now.strftime("%H:%M:%S #{message}")[0..139] if ENV['RAILS_ENV'] == "development"
-  #
-  #   puts ENV['RAILS_ENV']
-  #   puts message
-  #   puts client.update(message).inspect
-  # end
+  message = prepare_salad
+  if message
+    ## Add full timestamp during tests, to get around twitter blocking duplicate test messages
+    message = Time.now.strftime("%H:%M:%S #{message}")[0..139] if ENV['RAILS_ENV'] == "development"
+
+    puts ENV['RAILS_ENV']
+    puts message
+    puts client.update(message).inspect
+  end
 
 end
 
