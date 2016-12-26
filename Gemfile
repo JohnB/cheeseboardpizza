@@ -1,3 +1,5 @@
+# Comment out ruby version to run locally.
+# ruby "2.3"
 ruby "2.2.4"
 source 'https://rubygems.org'
 
