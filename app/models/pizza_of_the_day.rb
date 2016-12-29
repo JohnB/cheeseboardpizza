@@ -112,7 +112,7 @@ class PizzaOfTheDay
   def salad_of_the_day( today = Time.now )
     today = today.strftime("%m/%d")
     salad = days_with_salad[today]
-    salad || "Aw shucks! No salad today."
+    "SALAD: " + (salad || "Not today.")
   end
 
   def salad_of_the_day_with_time(today = Time.now)
