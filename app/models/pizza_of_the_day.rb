@@ -12,9 +12,9 @@ class PizzaOfTheDay
   PIZZA_PAGE_URL = 'http://cheeseboardcollective.coop/pizza'
   DAY_MATCH = /\d+\/\d+/
 
-  def cheeseboard_date(time = Time.now)
-    # "Sat Dec 10" (re-assess in the first week of January 2017 - "Jan 1" or "Jan 01"?)
-    time.strftime("%a %h %-d")
+  def cheeseboard_dates(time = Time.now)
+    # allow for days as "4" and "04"
+    [time.strftime("%a %h %-d"), time.strftime("%a %h %d")]
   end
 
   def pizza_page
@@ -65,9 +65,9 @@ class PizzaOfTheDay
 
   def days_with_pizza
     @days_with_pizza ||= potential_pizza_dates.inject({}) do |hash, day|
-      day_to_look_for = cheeseboard_date(day)
+      days_to_look_for = cheeseboard_dates(day)
 
-      topping = days_and_pizzas[day_to_look_for]
+      topping = days_and_pizzas[days_to_look_for.first] || days_and_pizzas[days_to_look_for.last]
       if topping
         topping.gsub!(/ and /,' & ')
         topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
@@ -95,9 +95,9 @@ class PizzaOfTheDay
 
   def days_with_salad
     @days_with_salad ||= potential_pizza_dates.inject({}) do |hash, day|
-      day_to_look_for = cheeseboard_date(day)
+      day_to_look_for = cheeseboard_dates(day)
 
-      topping = days_and_salads[day_to_look_for]
+      topping = days_and_pizzas[days_to_look_for.first] || days_and_pizzas[days_to_look_for.last]
       if topping
         topping.gsub!(/ and /,' & ')
         topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
