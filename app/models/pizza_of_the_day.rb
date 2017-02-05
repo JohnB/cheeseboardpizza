@@ -95,7 +95,7 @@ class PizzaOfTheDay
 
   def days_with_salad
     @days_with_salad ||= potential_pizza_dates.inject({}) do |hash, day|
-      day_to_look_for = cheeseboard_dates(day)
+      days_to_look_for = cheeseboard_dates(day)
 
       topping = days_and_pizzas[days_to_look_for.first] || days_and_pizzas[days_to_look_for.last]
       if topping
