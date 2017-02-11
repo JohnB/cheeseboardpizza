@@ -97,7 +97,7 @@ class PizzaOfTheDay
     @days_with_salad ||= potential_pizza_dates.inject({}) do |hash, day|
       days_to_look_for = cheeseboard_dates(day)
 
-      topping = days_and_pizzas[days_to_look_for.first] || days_and_pizzas[days_to_look_for.last]
+      topping = days_and_salads[days_to_look_for.first] || days_and_salads[days_to_look_for.last]
       if topping
         topping.gsub!(/ and /,' & ')
         topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
