@@ -7,7 +7,7 @@ gem 'nokogiri'
 gem 'twitter', :git => 'https://github.com/sferik/twitter.git', :branch => 'streaming-updates'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.8'
+gem 'rails', '4.2.10'
 # Use postgres on Heroku
 gem 'pg'
 
