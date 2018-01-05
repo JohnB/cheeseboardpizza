@@ -11,6 +11,7 @@ require 'open-uri'
 class PizzaOfTheDay
   PIZZA_PAGE_URL = 'http://cheeseboardcollective.coop/pizza'
   DAY_MATCH = /\d+\/\d+/
+  MAX_TWEET_LENGTH = 270
 
   def cheeseboard_dates(time = Time.now)
     # allow for days as "4" and "04"
@@ -90,7 +91,7 @@ class PizzaOfTheDay
   end
 
   def tweet_text(today = Time.now)
-    pizza_of_the_day_with_time(today)[0..139]
+    pizza_of_the_day_with_time(today)[0..MAX_TWEET_LENGTH]
   end
 
   def days_with_salad
@@ -120,6 +121,6 @@ class PizzaOfTheDay
   end
 
   def salad_tweet_text(today = Time.now)
-    salad_of_the_day_with_time(today)[0..139]
+    salad_of_the_day_with_time(today)[0..MAX_TWEET_LENGTH]
   end
 end

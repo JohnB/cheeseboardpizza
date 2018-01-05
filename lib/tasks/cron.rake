@@ -14,7 +14,7 @@ task :cron => :environment do
     begin
       tweet_text = PizzaOfTheDay.new.tweet_text
     rescue Exception => e
-      tweet_text = "d @JohnB #{e}"[0..139]
+      tweet_text = "d @JohnB #{e}"[0..PizzaOfTheDay::MAX_TWEET_LENGTH]
     end
   end
 
@@ -22,7 +22,7 @@ task :cron => :environment do
     begin
       tweet_text = PizzaOfTheDay.new.salad_tweet_text
     rescue Exception => e
-      tweet_text = "d @JohnB salad #{e}"[0..139]
+      tweet_text = "d @JohnB salad #{e}"[0..PizzaOfTheDay::MAX_TWEET_LENGTH]
     end
   end
 
@@ -30,7 +30,7 @@ task :cron => :environment do
   message = prepare_message || "d @JohnB PizzaOfTheDay.new.tweet_text returned nil."
 
   ## Add full timestamp during tests, to get around twitter blocking duplicate test messages
-  message = Time.now.strftime("%H:%M:%S #{message}")[0..139] if ENV['RAILS_ENV'] == "development"
+  message = Time.now.strftime("%H:%M:%S #{message}")[0..PizzaOfTheDay::MAX_TWEET_LENGTH] if ENV['RAILS_ENV'] == "development"
 
   puts ENV['RAILS_ENV']
   puts message
@@ -39,7 +39,7 @@ task :cron => :environment do
   message = prepare_salad
   if message
     ## Add full timestamp during tests, to get around twitter blocking duplicate test messages
-    message = Time.now.strftime("%H:%M:%S #{message}")[0..139] if ENV['RAILS_ENV'] == "development"
+    message = Time.now.strftime("%H:%M:%S #{message}")[0..PizzaOfTheDay::MAX_TWEET_LENGTH] if ENV['RAILS_ENV'] == "development"
 
     puts ENV['RAILS_ENV']
     puts message
