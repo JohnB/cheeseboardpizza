@@ -1,6 +1,8 @@
-# Comment out ruby version to run locally.
-# ruby "2.3"
-# ruby "2.2.4"
+
+# Herokup prefers 2.2.4, which was set with "heroku config:set CUSTOM_RUBY_VERSION=2.2.4"
+ruby ENV['CUSTOM_RUBY_VERSION'] || '2.3.3'
+
+
 source 'https://rubygems.org'
 
 gem 'nokogiri'
