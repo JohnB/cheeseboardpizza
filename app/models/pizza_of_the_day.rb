@@ -9,7 +9,7 @@ require 'open-uri'
 # what day the pizza is served (e.g. "<p class='tuesday'>Roasted potatoes..</p>")
 #
 class PizzaOfTheDay
-  PIZZA_PAGE_URL = 'http://cheeseboardcollective.coop/pizza'
+  PIZZA_PAGE_URL = 'https://cheeseboardcollective.coop/pizza'
   DAY_MATCH = /\d+\/\d+/
   MAX_TWEET_LENGTH = 270
 
