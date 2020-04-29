@@ -1,6 +1,6 @@
 
 # Herokup prefers 2.2.4, which was set with "heroku config:set CUSTOM_RUBY_VERSION=2.2.4"
-ruby ENV['CUSTOM_RUBY_VERSION'] || '2.3.3'
+ruby ENV['CUSTOM_RUBY_VERSION'] || '2.6.6'
 
 
 source 'https://rubygems.org'
