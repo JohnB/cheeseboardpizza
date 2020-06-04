@@ -70,6 +70,7 @@ class PizzaOfTheDay
 
       topping = days_and_pizzas[days_to_look_for.first] || days_and_pizzas[days_to_look_for.last]
       if topping
+        topping.gsub!(/ the online store /,' https://cheeseboardcollective.revelup.com/weborder/ ')
         topping.gsub!(/ and /,' & ')
         topping.gsub!(/\*/,' ')   # as of 4/2015, asterisks are, apparently, not allowed!?
         topping.sub!(/^Pizza\:\s+/,'')   # after adding salads, they stuck 'Pizza: ' on the front.
@@ -112,12 +113,12 @@ class PizzaOfTheDay
 
   def salad_of_the_day( today = Time.now )
     today = today.strftime("%m/%d")
-    salad = days_with_salad[today]
-    "SALAD: " + (salad || "Not today.")
+    days_with_salad[today]
   end
 
   def salad_of_the_day_with_time(today = Time.now)
-    today.strftime("%m/%d: ") + salad_of_the_day(today)
+    salad = salad_of_the_day(today)
+    today.strftime("%m/%d: SALAD: ") + salad if salad
   end
 
   def salad_tweet_text(today = Time.now)
